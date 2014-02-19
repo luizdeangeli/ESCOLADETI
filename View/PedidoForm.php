@@ -3,11 +3,20 @@
 	
 	<form id="form" name='form' action="/Pedido/salvar" method="POST" >  	  
 
-		<input type="text" name="prodPedidos" value="{{prodPedidos}}"/>
-
 	   	<h3><i class="glyphicon glyphicon-shopping-cart"></i> Pedido de Compra</h3>
 		<hr>
-		 <div class="row">
+		<div class="row">
+		 	<div class="form-group col-sm-2">
+		      <label for="cpf">CPF</label>
+		      <input ng-change="cliente = getCliente(cpf);" ng-model="cpf" type="text" name="cpf" id="cpf" class="form-control">
+		    </div>
+		    <div class="form-group col-sm-10">
+		      <label for="cliente">Cliente</label>
+		      <select ng-change="cpf = cliente.cpf" ng-model="cliente" name="cliente" id="cliente" class="form-control" ng-options="c.nome for c in clientes"></select>
+		    </div>
+		</div>
+		<hr>
+		<div class="row">
 		 	<div class="form-group col-sm-1">
 		      <label for="idProduto">Produto</label>
 		      <input ng-change="produto = getProduto(idProduto);preco = produto.preco; quantidade = 1" ng-model="idProduto" type="text" name="idProduto" id="idProduto" class="form-control">
@@ -91,6 +100,13 @@
 			{idProduto : 4, nome : "CPU", preco : 70.00}
 		];
 
+		$scope.clientes 	= [
+			{idCliente : 1, nome : "Luiz Henrique", cpf : "111.111.111-11"},
+			{idCliente : 2, nome : "Maria da Silva", cpf : "222.222.222-22"},
+			{idCliente : 3, nome : "Carlos de Souza", cpf : "333.333.333-33"},
+			{idCliente : 4, nome : "Marta Siqueira", cpf : "444.444.444-44"}
+		];
+
 		$scope.addProduto = function() { 
 			$scope.prodPedidos.push({produto : $scope.produto,qtde:$scope.quantidade,preco:$scope.preco});		
 		}
@@ -114,6 +130,14 @@
 			for(var i=0;i<$scope.produtos.length;i++)
 				if($scope.produtos[i].idProduto == idProduto )
 		    		return $scope.produtos[i];
+		   	return false;
+		}
+
+		$scope.getCliente = function(cpf) 
+		{		
+			for(var i=0;i<$scope.clientes.length;i++)
+				if($scope.clientes[i].cpf == cpf )
+		    		return $scope.clientes[i];
 		   	return false;
 		}
 	}
