@@ -13,19 +13,28 @@
   <body ng-controller="PedidoController" ng-init="init()">
 
 	<div class="container">
+
 	
-	<form id="form" name='form' action="/Pedido/salvar" method="POST" >  	  
+	
+	<form id="form" name="form" action="/Pedido/salvar" method="POST" >  	  
 
 	   	<h3><i class="glyphicon glyphicon-shopping-cart"></i> Pedido de Compra</h3>
 		<hr>
+
+		<div class="alert alert-warning" ng-show="form.$invalid">
+	        <strong>Atenção!</strong>
+	          <li ng-show="form.cpf.$error.required">Campo <strong>CPF</strong> é obrigatório.</li>
+	          <li ng-show="form.cliente.$error.required">Campo <strong>Nome</strong> é obrigatório.</li>
+	      </div>
+
 		<div class="row">
 		 	<div class="form-group col-sm-2">
 		      <label for="cpf">CPF</label>
-		      <input ng-change="cliente = getCliente(cpf);" ng-model="cpf" type="text" name="cpf" id="cpf" class="form-control">
+		      <input ng-change="cliente = getCliente(cpf);" ng-model="cpf" type="text" name="cpf" id="cpf" class="form-control" required>
 		    </div>
 		    <div class="form-group col-sm-10">
 		      <label for="cliente">Cliente</label>
-		      <select ng-change="cpf = cliente.cpf" ng-model="cliente" name="cliente" id="cliente" class="form-control" ng-options="c.nome for c in clientes"></select>
+		      <select ng-change="cpf = cliente.cpf" ng-model="cliente" name="cliente" id="cliente" class="form-control" ng-options="c.nome for c in clientes" required></select>
 		    </div>
 		</div>
 		<hr>
@@ -89,7 +98,7 @@
 		        		<td class="text-center">{{prod.produto.idProduto}}</td>
 		        		<td>{{prod.produto.nome}}</td>
 		        		<td class="text-center"><input class="form-control" type="number" min="1" ng-model="prod.qtde"></td>
-		        		<td class="text-center"><input class="form-control" type="number" min="1" ng-model="prod.desconto"></td>
+		        		<td class="text-center"><input class="form-control" type="number" min="0" max="100" ng-model="prod.desconto"></td>
 		        		<td class="hidden-xs text-right">{{prod.preco | currency:"R$ "}}</td>		        		
 		        		<td class="text-right">{{ (prod.preco * prod.qtde) - ((prod.preco * prod.qtde)*(prod.desconto/100)) | currency:"R$ "}}</td>
 		        		<td><button type="button" class="btn btn-link btn-xs" title="Excluir" ng:click="delProduto($index)"><i class="glyphicon glyphicon-trash"></i> </button></td>
@@ -147,9 +156,9 @@
 		$scope.addProduto = function() { 
 			$scope.prodPedidos.push({
 				produto : $scope.produto,
-				qtde    : $scope.quantidade,
+				qtde    : parseInt($scope.quantidade),
 				preco   : $scope.preco,
-				desconto: $scope.desconto
+				desconto: parseInt($scope.desconto)
 			});		
 
 			$scope.produto 		= null;
