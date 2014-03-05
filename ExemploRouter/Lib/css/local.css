@@ -1,0 +1,22 @@
+tr.lineDiff{
+	background-color: #428bca;
+}
+
+/*.has-error input{
+	background-color: #f8eded;
+}*/
+
+.popover{
+	
+	
+}
+
+.popover-content{
+	padding:5px;
+	font-size:11px;	
+	color:#b94a48;	
+}
+
+.modal-body{
+  padding-bottom: 0px;
+}

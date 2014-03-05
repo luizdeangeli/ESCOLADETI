@@ -14,9 +14,7 @@
 
 	<div class="container">
 
-	
-	
-	<form id="form" name="form" action="/Pedido/salvar" method="POST" >  	  
+	<form id="form" name="form">  	  
 
 	   	<h3><i class="glyphicon glyphicon-shopping-cart"></i> Pedido de Compra</h3>
 		<hr>
@@ -25,55 +23,55 @@
 	        <strong>Atenção!</strong>
 	          <li ng-show="form.cpf.$error.required">Campo <strong>CPF</strong> é obrigatório.</li>
 	          <li ng-show="form.cliente.$error.required">Campo <strong>Nome</strong> é obrigatório.</li>
-	      </div>
+	    </div>
 
 		<div class="row">
 		 	<div class="form-group col-sm-2">
-		      <label for="cpf">CPF</label>
+		      <label>CPF</label>
 		      <input ng-change="cliente = getCliente(cpf);" ng-model="cpf" type="text" name="cpf" id="cpf" class="form-control" required>
 		    </div>
 		    <div class="form-group col-sm-10">
-		      <label for="cliente">Cliente</label>
+		      <label>Cliente</label>
 		      <select ng-change="cpf = cliente.cpf" ng-model="cliente" name="cliente" id="cliente" class="form-control" ng-options="c.nome for c in clientes" required></select>
 		    </div>
 		</div>
 		<hr>
 		<div class="row">
 		 	<div class="form-group col-sm-2">
-		      <label for="idProduto">Produto</label>
+		      <label>Produto</label>
 		      <input ng-change="produto = getProduto(idProduto);preco = produto.preco; quantidade = 1" ng-model="idProduto" type="text" name="idProduto" id="idProduto" class="form-control">
 		    </div>
 		    <div class="form-group col-sm-10">
-		      <label for="idProduto">Produto</label>
-		      <select ng-change="idProduto = produto.idProduto; preco = produto.preco; quantidade = 1" ng-model="produto" name="produto" id="produto" class="form-control" ng-options="p.nome for p in produtos | filter:filtraProdutoPedido"></select>
+		      <label>Produto</label>
+		      <select ng-change="idProduto = produto.idProduto; preco = produto.preco; quantidade = 1" ng-model="produto" name="produto" id="produto" class="form-control" ng-options="p.nome for p in produtos"></select>
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="form-group col-sm-2">
-		      <label for="quantidade">Quantidade</label>
+		      <label>Quantidade</label>
 		      <input type="number" ng-model="quantidade" name="quantidade" id="quantidade" ng-init="quantidade=1" min="1" class="form-control text-center">
 		    </div>
 		    <div class="form-group col-sm-2">
-		      <label for="desconto">Desconto</label>
+		      <label>Desconto</label>
 		      <input type="number" ng-model="desconto" name="desconto" id="desconto" ng-init="desconto=0" min="0" max="100" class="form-control text-center">
 		    </div>
 		    <div class="form-group col-sm-3">
-		     	<label for="preco">Valor Unitário</label>	      
+		     	<label>Valor Unitário</label>	      
 		     	<div class="input-group">
 					<span class="input-group-addon">R$</span>
 					<input type="text" ng-model="preco" class="form-control text-right">
 				</div>
 		    </div>
 		    <div class="form-group col-sm-3">
-		     	<label for="subtotal">Sub Total</label>	      
+		     	<label>Sub Total</label>	      
 		     	<div class="input-group">
 					<span class="input-group-addon">R$</span>
 					<input type="text" class="form-control text-right" disabled="disabled" value="{{ (preco * quantidade) - ((preco * quantidade)*(desconto/100)) | currency:'R$ '}}">
 				</div>
 		    </div>
-		    <div class="form-group col-sm-2" ng-show="{{produto == null}}">		
-		    	<label for="preco">&nbsp;</label>	          	
-		    	<button ng-model="button" type="button" class="form-control btn btn-success" ng-click="addProduto()" ng-disabled="produto == null"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
+		    <div class="form-group col-sm-2">		
+		    	<label>&nbsp;</label>	          	
+		    	<button ng-model="button" type="button" class="form-control btn btn-success" ng-click="addProduto()"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
 		    </div>
 		</div>
 
@@ -113,7 +111,7 @@
 		<div class="row pull-right">
 			<div class="form-group col-lg-12 col-sm-12">
 				<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i> Salvar</button>
-				<a href="/Pedido/listar" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Cancelar</a>
+				<a href="#" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Cancelar</a>
 			</div>
 		</div>
 	</form>
@@ -123,34 +121,15 @@
 
 
 
-	function PedidoController($scope) {
+	function PedidoController($scope, $http) {
 		
 		$scope.prodPedidos 	= [];
-
-		$scope.produtos 	= [
-			{idProduto : 1, nome : "Mouse", preco : 10.00},
-			{idProduto : 2, nome : "Teclado", preco : 20.00},
-			{idProduto : 3, nome : "Fonte", preco : 35.00},
-			{idProduto : 4, nome : "CPU", preco : 70.00}
-		];
-
-		$scope.clientes 	= [
-			{idCliente : 1, nome : "Luiz Henrique", cpf : "111.111.111-11"},
-			{idCliente : 2, nome : "Maria da Silva", cpf : "222.222.222-22"},
-			{idCliente : 3, nome : "Carlos de Souza", cpf : "333.333.333-33"},
-			{idCliente : 4, nome : "Marta Siqueira", cpf : "444.444.444-44"}
-		];
-
-		$scope.filtraProdutoPedido = function( p ) {			
-			for(var i=0;i<$scope.prodPedidos.length;i++)
-				if(p.idProduto == $scope.prodPedidos[i].produto.idProduto )
-		 			return false;
-
-		 	return true;
-		};
-
+		$scope.produtos 	= [];
+		$scope.clientes 	= [];
+		
 		$scope.init = function() { 
-			
+			$scope.requestListarCliente();
+			$scope.requestListarProduto();
 		};
 
 		$scope.addProduto = function() { 
@@ -192,6 +171,32 @@
 		    		return $scope.clientes[i];
 		   	return false;
 		};
+
+		/* REQUEST */
+
+		$scope.requestListarCliente = function (){
+          $http({
+            method  : "POST",
+            url     : "./ListarCliente.php", 
+            headers : {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}           
+          }).success(function(data, status) {
+               $scope.clientes = data;
+            }).error(function(data, status) {               
+               alert("Erro ao buscar clientes!");
+            });
+        };
+
+        $scope.requestListarProduto = function (){
+          $http({
+            method  : "POST",
+            url     : "./ListarProduto.php", 
+            headers : {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}           
+          }).success(function(data, status) {
+               $scope.produtos = data;
+            }).error(function(data, status) {               
+               alert("Erro ao buscar produtos!");
+            });
+        };
 	}
 
 </script>

@@ -1,0 +1,200 @@
+<!--
+
+		1 - Colocar o ng-app
+		2 - Colocar o ng-controller e ng-init
+		3 - Criar o script com a função do controller
+		4 - Criar a função ng-init
+		5 - Explicar o ng-model e as {{}}
+		6 - Criar as variáveis para armazenar os produtos e clientes
+		7 -  
+
+-->
+
+<!DOCTYPE html>
+<html lang="pt" ng-app>
+  <head>
+    <title>Project Name</title>    
+    <meta charset="UTF-8">
+    <link href="./Lib/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="./Lib/js/jquery.min.js"></script>
+    <script src="./Lib/js/angular.min.js"></script>        
+    <script src="./Lib/js/bootstrap.min.js"></script>    
+   
+  </head>
+  <body ng-controller="PedidoController" ng-init="init()">
+
+	<div class="container">
+
+	<form id="form" name="form">  	  
+
+	   	<h3><i class="glyphicon glyphicon-shopping-cart"></i> Pedido de Compra</h3>
+		<hr>
+
+		<div class="alert alert-warning" ng-show="form.$invalid">
+	        <strong>Atenção!</strong>
+	          <li ng-show="form.cpf.$error.required">Campo <strong>CPF</strong> é obrigatório.</li>
+	          <li ng-show="form.cliente.$error.required">Campo <strong>Nome</strong> é obrigatório.</li>
+	    </div>
+
+		<div class="row">
+		 	<div class="form-group col-sm-2">
+		      <label>CPF</label>
+		      <input ng-change="cliente = getCliente(cpf);" ng-model="cpf" type="text" name="cpf" id="cpf" class="form-control" required>
+		    </div>
+		    <div class="form-group col-sm-10">
+		      <label>Cliente</label>
+		      <select ng-change="cpf = cliente.cpf" ng-model="cliente" name="cliente" id="cliente" class="form-control" ng-options="c.nome for c in clientes" required></select>
+		    </div>
+		</div>
+		<hr>
+		<div class="row">
+		 	<div class="form-group col-sm-2">
+		      <label>Produto</label>
+		      <input ng-change="produto = getProduto(idProduto);preco = produto.preco; quantidade = 1" ng-model="idProduto" type="text" name="idProduto" id="idProduto" class="form-control">
+		    </div>
+		    <div class="form-group col-sm-10">
+		      <label>Produto</label>
+		      <select ng-change="idProduto = produto.idProduto; preco = produto.preco; quantidade = 1" ng-model="produto" name="produto" id="produto" class="form-control" ng-options="p.nome for p in produtos"></select>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="form-group col-sm-2">
+		      <label>Quantidade</label>
+		      <input type="number" ng-model="quantidade" name="quantidade" id="quantidade" ng-init="quantidade=1" min="1" class="form-control text-center">
+		    </div>
+		    <div class="form-group col-sm-2">
+		      <label>Desconto</label>
+		      <input type="number" ng-model="desconto" name="desconto" id="desconto" ng-init="desconto=0" min="0" max="100" class="form-control text-center">
+		    </div>
+		    <div class="form-group col-sm-3">
+		     	<label>Valor Unitário</label>	      
+		     	<div class="input-group">
+					<span class="input-group-addon">R$</span>
+					<input type="text" ng-model="preco" class="form-control text-right">
+				</div>
+		    </div>
+		    <div class="form-group col-sm-3">
+		     	<label>Sub Total</label>	      
+		     	<div class="input-group">
+					<span class="input-group-addon">R$</span>
+					<input type="text" class="form-control text-right" disabled="disabled" value="{{ (preco * quantidade) - ((preco * quantidade)*(desconto/100)) | currency:'R$ '}}">
+				</div>
+		    </div>
+		    <div class="form-group col-sm-2">		
+		    	<label>&nbsp;</label>	          	
+		    	<button ng-model="button" type="button" class="form-control btn btn-success" ng-click="addProduto()"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
+		    </div>
+		</div>
+
+		<hr>
+
+		<div class="row" >
+			<div class="table-responsive">
+			 <table class="table table-hover" id="tableList">
+		        <thead>
+		          <tr>
+		            <th class="col-md-1 text-center">Cód.</th>
+		            <th class="col-md-4">Nome</th>
+		            <th class="col-md-1 text-center">Qtde</th>
+		            <th class="col-md-1 text-center">Desc</th>
+		            <th class="col-md-2 hidden-xs text-right">Preço</th>		            
+		            <th class="col-md-2 text-right">Total</th>
+		            <th class="col-md-1">&nbsp;</th>		            	           
+		          </tr>
+		        </thead>
+		        <tbody ng-repeat="prod in prodPedidos">
+		        	<tr>
+		        		<td class="text-center">{{prod.produto.idProduto}}</td>
+		        		<td>{{prod.produto.nome}}</td>
+		        		<td class="text-center"><input class="form-control" type="number" min="1" ng-model="prod.qtde"></td>
+		        		<td class="text-center"><input class="form-control" type="number" min="0" max="100" ng-model="prod.desconto"></td>
+		        		<td class="hidden-xs text-right">{{prod.preco | currency:"R$ "}}</td>		        		
+		        		<td class="text-right">{{ (prod.preco * prod.qtde) - ((prod.preco * prod.qtde)*(prod.desconto/100)) | currency:"R$ "}}</td>
+		        		<td><button type="button" class="btn btn-link btn-xs" title="Excluir" ng:click="delProduto($index)"><i class="glyphicon glyphicon-trash"></i> </button></td>
+		        	</tr>
+		        </tbody>
+		        	<tr>		        		
+		        		<td colspan="6" class="text-right"><h3><span class="label label-success">{{sumProduto() | currency:"R$ "}}</span></h3></td>		        		
+		        	</tr>
+		      </table>
+		    </div>
+		</div>
+		<div class="row pull-right">
+			<div class="form-group col-lg-12 col-sm-12">
+				<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i> Salvar</button>
+				<a href="#" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Cancelar</a>
+			</div>
+		</div>
+	</form>
+	</div>
+
+<script>
+
+
+
+	function PedidoController($scope, $http) {
+		
+		$scope.prodPedidos 	= [];
+
+		$scope.produtos 	= [
+			{idProduto : 1, nome : "Mouse", preco : 10.00},
+			{idProduto : 2, nome : "Teclado", preco : 20.00},
+			{idProduto : 3, nome : "Fonte", preco : 35.00},
+			{idProduto : 4, nome : "CPU", preco : 70.00}
+		];
+
+		$scope.clientes 	= [
+			{idCliente : 1, nome : "Luiz Henrique", cpf : "111.111.111-11"},
+			{idCliente : 2, nome : "Maria da Silva", cpf : "222.222.222-22"},
+			{idCliente : 3, nome : "Carlos de Souza", cpf : "333.333.333-33"},
+			{idCliente : 4, nome : "Marta Siqueira", cpf : "444.444.444-44"}
+		];
+		
+		$scope.init = function() { 
+			
+		};
+
+		$scope.addProduto = function() { 
+			$scope.prodPedidos.push({
+				produto : $scope.produto,
+				qtde    : parseInt($scope.quantidade),
+				preco   : $scope.preco,
+				desconto: parseInt($scope.desconto)
+			});		
+
+			$scope.produto 		= null;
+			$scope.idProduto 	= "";
+			$scope.quantidade 	= 1;
+			$scope.desconto 	= 0;
+		};
+
+		$scope.delProduto = function(index) {			
+			if(confirm("Deseja excluir o produto?"))
+				$scope.prodPedidos.splice(index,1);
+		};
+
+		$scope.sumProduto = function() {			
+		   	var total = 0;
+			for(var i=0;i<$scope.prodPedidos.length;i++)
+		    	total += ($scope.prodPedidos[i].qtde * $scope.prodPedidos[i].preco) - (($scope.prodPedidos[i].qtde * $scope.prodPedidos[i].preco)*($scope.prodPedidos[i].desconto/100));
+		   	return total;
+		};
+
+		$scope.getProduto = function(idProduto) {		
+			for(var i=0;i<$scope.produtos.length;i++)
+				if($scope.produtos[i].idProduto == idProduto )
+		    		return $scope.produtos[i];
+		   	return false;
+		};
+
+		$scope.getCliente = function(cpf) {		
+			for(var i=0;i<$scope.clientes.length;i++)
+				if($scope.clientes[i].cpf == cpf )
+		    		return $scope.clientes[i];
+		   	return false;
+		};
+	}
+
+</script>
+  

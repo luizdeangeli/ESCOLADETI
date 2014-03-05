@@ -1,0 +1,119 @@
+<!--
+
+	1 - Explicar sobre tela responsível 
+	2 - Explicar sobre a tabela do bootstrap de 12 colunas
+	3 - Explicar sobre a diferença do 
+			xs: Phones (<768px)
+			sm: Tablets (≥768px)
+			md: Desktops (≥992px)
+			lg: Desktops (≥1200px)		
+
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project Name</title>    
+    <meta charset="UTF-8">
+    <link href="./Lib/css/bootstrap.min.css" rel="stylesheet">
+    <script src="./Lib/js/bootstrap.min.js"></script>    
+  </head>
+  <body>
+
+	<div class="container">
+	
+		<form> 
+		   	<h3><i class="glyphicon glyphicon-shopping-cart"></i> Pedido de Compra</h3>
+			<hr>
+
+			<div class="row">
+			 	<div class="form-group col-sm-2">
+			      <label>CPF</label>
+			      <input type="text" name="cpf" id="cpf" class="form-control" required>
+			    </div>
+			    <div class="form-group col-sm-10">
+			      <label>Cliente</label>
+			      <select name="cliente" id="cliente" class="form-control" required></select>
+			    </div>
+			</div>
+			<hr>
+			<div class="row">
+			 	<div class="form-group col-sm-2">
+			      <label>Produto</label>
+			      <input type="text" name="idProduto" id="idProduto" class="form-control">
+			    </div>
+			    <div class="form-group col-sm-10">
+			      <label>Produto</label>
+			      <select name="produto" id="produto" class="form-control"></select>
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="form-group col-sm-2">
+			      <label>Quantidade</label>
+			      <input type="number" name="quantidade" id="quantidade" min="1" class="form-control text-center">
+			    </div>
+			    <div class="form-group col-sm-2">
+			      <label>Desconto</label>
+			      <input type="number" name="desconto" id="desconto" min="0" max="100" class="form-control text-center">
+			    </div>
+			    <div class="form-group col-sm-3">
+			     	<label>Valor Unitário</label>	      
+			     	<div class="input-group">
+						<span class="input-group-addon">R$</span>
+						<input type="text" class="form-control text-right">
+					</div>
+			    </div>
+			    <div class="form-group col-sm-3">
+			     	<label>Sub Total</label>	      
+			     	<div class="input-group">
+						<span class="input-group-addon">R$</span>
+						<input type="text" class="form-control text-right" disabled="disabled">
+					</div>
+			    </div>
+			    <div class="form-group col-sm-2">		
+			    	<label>&nbsp;</label>	          	
+			    	<button type="button" class="form-control btn btn-success"><i class="glyphicon glyphicon-plus"></i> Adicionar</button>
+			    </div>
+			</div>
+
+			<hr>
+
+			<div class="row" >
+				<div class="table-responsive">
+				 <table class="table table-hover" id="tableList">
+			        <thead>
+			          <tr>
+			            <th class="col-md-1 text-center">Cód.</th>
+			            <th class="col-md-4">Nome</th>
+			            <th class="col-md-1 text-center">Qtde</th>
+			            <th class="col-md-1 text-center">Desc</th>
+			            <th class="col-md-2 hidden-xs text-right">Preço</th>		            
+			            <th class="col-md-2 text-right">Total</th>
+			            <th class="col-md-1">&nbsp;</th>		            	           
+			          </tr>
+			        </thead>
+			        <tbody>
+			        	<tr>
+			        		<td class="text-center"> 1 </td>
+			        		<td>Mouse</td>
+			        		<td class="text-center"><input class="form-control" type="number" min="1"></td>
+			        		<td class="text-center"><input class="form-control" type="number" min="0" max="100" ng-model="prod.desconto"></td>
+			        		<td class="hidden-xs text-right"> R$ 10,00 </td>		        		
+			        		<td class="text-right">R$ 10,00</td>
+			        		<td><button type="button" class="btn btn-link btn-xs" title="Excluir"><i class="glyphicon glyphicon-trash"></i> </button></td>
+			        	</tr>
+			        </tbody>
+			        	<tr>		        		
+			        		<td colspan="6" class="text-right"><h3><span class="label label-success">R$ 10,00</span></h3></td>		        		
+			        	</tr>
+			      </table>
+			    </div>
+			</div>
+			<div class="row pull-right">
+				<div class="form-group col-lg-12 col-sm-12">
+					<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i> Salvar</button>
+					<a href="#" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Cancelar</a>
+				</div>
+			</div>
+		</form>
+	</div>
