@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html  ng-app>
+  <head>
+    <title>Project Name</title>    
+    <meta charset="UTF-8">
+    <link href="./Lib/css/bootstrap.min.css" rel="stylesheet">
+    <script src="./Lib/js/jquery.min.js"></script>
+    <script src="./Lib/js/angular.min.js"></script>        
+    <script src="./Lib/js/bootstrap.min.js"></script>    
+  </head>
+  <body ng-controller="MainController" ng-init="init()">
+
+	<div class="container">
+	
+		<form> 
+
+		<h3><i class="glyphicon glyphicon-pencil"></i> Cadastro de cliente</h3>
+
+		<div class="row">
+		 	<div class="form-group col-md-2">
+		      <label for="idCliente">Código</label>
+		      <input type="text" readonly="readonly" class="form-control" placeholder="AUTO">
+		    </div>
+		    <div class="form-group col-md-10">
+		      <label for="nome">Nome</label>
+		      <input type="text" name="nome" id="nome" value="" class="form-control" placeholder="Nome Completo">
+		    </div>
+		 </div>
+
+		 <div class="row">
+		    <div class="form-group col-lg-3 col-md-3">
+		      <label for="exampleInputEmail">CPF</label>
+		      <input type="text"  class="form-control maskCpf" placeholder="Número do CPF">
+		    </div>
+		    <div class="form-group col-lg-3 col-md-3">
+		      	<label for="rg">RG</label>			      
+				<input type="text" class="form-control" placeholder="R.G.">
+		    </div>		   
+		    <div class="form-group col-lg-3 col-md-3">
+		      	<label for="dataExpedicao">Data de expedição</label>			      
+				<input type="date" class="form-control">
+		    </div>		   
+		    <div class="form-group col-lg-3 col-md-3">
+		      	<label for="orgaoEmissor">Orgão Emissor</label>			      
+				<input type="text" class="form-control" placeholder="Orgão Emissor">
+		    </div>		   
+		 </div>
+
+		 <div class="row">
+		 	<div class="form-group col-lg-2 col-md-2">
+		      <label for="dataNascimento">Data Nascimento</label>      						
+			  <input type="date" class="form-control">
+		    </div>	
+		 	<div class="form-group col-lg-2 col-md-2">
+		      <label for="cep">CEP</label>
+		      <input type="text" class="form-control maskCep" placeholder="99999-999">
+		    </div>
+		    <div class="form-group col-lg-6 col-md-6">
+		      <label for="logradouro">Logradouro</label>
+		      <input type="text" class="form-control" placeholder="Logradouro">
+		    </div>
+		    <div class="form-group col-lg-2 col-md-2">
+		      <label for="numero">Número</label>
+		      <input type="text" class="form-control" placeholder="Número">
+		    </div>
+		 </div>
+
+		 <div class="row">
+		    <div class="form-group col-lg-6 col-md-6">
+		      <label for="complemento">Complemento</label>
+		      <input type="text" class="form-control" placeholder="Complemento">
+		    </div>
+		    <div class="form-group col-lg-6 col-md-6">
+		      <label for="bairro">Bairro</label>
+		      <input type="text" class="form-control" placeholder="Bairro">
+		    </div>
+		 </div>
+
+		 <div class="row">
+		    <div class="form-group col-lg-4 col-md-4">
+		      <label for="estado">Estado</label>
+		      <select name="estado" id="estado" class="form-control">
+		      </select>
+		    </div>
+		    <div class="form-group col-lg-8 col-md-8">
+		      <label for="cidade">Cidade</label>
+		      <input type="text" class="form-control" placeholder="Cidade">
+		    </div>
+		 </div>
+
+		<div class="row" >
+			<div class="col-md-6">
+				<h3><i class="glyphicon glyphicon-phone"></i> Telefone </h3>
+					<table class="table table-hover" id="tableList">
+						<thead>
+						  <tr>
+						    <th class="col-md-5">Tipo</th>
+						    <th class="col-md-6">Número</th>
+						    <th class="col-md-1 text-right">
+						    	<button type="button" class="btn btn-success btn-xs" ng-click="addTel()" title="Adicionar"><i class="glyphicon glyphicon-plus"></i> </button>
+						    </th>
+						  </tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="telefone in telefones">
+								<td class="text-center">
+									<select ng-model="telefone.tipo" class="form-control" ng-options="c.nome for c in tiposTelefones" required></select>
+								</td>
+								<td>
+									<input class="form-control" type="tel" ng-model="telefone.numero" placeholder="Nº de telefone">
+								</td>
+								<td class="text-right">
+									<button type="button" class="btn btn-danger btn-xs" ng-click="delTel($index)" title="Excluir"><i class="glyphicon glyphicon-minus"></i> </button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+		    </div>
+
+		    <div class="col-md-6">
+				<h3><i class="glyphicon glyphicon-envelope"></i> Email </h3>
+					<table class="table table-hover" id="tableList">
+						<thead>
+						  <tr>
+						    <th class="col-md-5">Tipo</th>
+						    <th class="col-md-6">Endereço</th>
+						    <th class="col-md-1 text-right">
+						    	<button type="button" class="btn btn-success btn-xs" ng-click="addEmail()" title="Adicionar"><i class="glyphicon glyphicon-plus"></i> </button>
+						    </th>
+						  </tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="email in emails">
+								<td class="text-center">
+									<select ng-model="email.tipo" class="form-control" ng-options="c.nome for c in tiposEmails" required></select>
+								</td>
+								<td>
+									<input class="form-control" type="email" ng-model="email.numero" placeholder="Endereço de email">
+								</td>
+								<td class="text-right">
+									<button type="button" class="btn btn-danger btn-xs" ng-click="delEmail($index)" title="Excluir"><i class="glyphicon glyphicon-minus"></i> </button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+		    </div>
+		</div>
+		</form>
+	</div>
+
+
+	<script>
+
+		function MainController($scope, $http) {
+
+			$scope.tiposTelefones = [
+				{nome : 'Celular'},
+				{nome : 'Casa'},
+				{nome : 'Trabalho'},
+				{nome : 'Outro'},
+			];
+
+			$scope.tiposEmails = [
+				{nome : 'Particular'},
+				{nome : 'Trabalho'},
+				{nome : 'Outro'},
+			];
+
+			$scope.telefones 	= [];
+			$scope.emails 		= [];
+
+			$scope.addTel = function(){
+				index = $scope.telefones.length < $scope.tiposTelefones.length ? $scope.telefones.length : $scope.tiposTelefones.length -1;
+				$scope.telefones.push({tipo : $scope.tiposTelefones[index] , numero : ''});
+			}
+
+			$scope.delTel = function(index){
+				$scope.telefones.splice(index,1);
+			}
+
+			$scope.addEmail = function(){
+				index = $scope.emails.length < $scope.tiposEmails.length ? $scope.emails.length : $scope.tiposEmails.length -1;
+				$scope.emails.push({tipo : $scope.tiposEmails[index] , endereco : ''});
+			}
+
+			$scope.delEmail = function(index){
+				$scope.emails.splice(index,1);
+			}
+
+		}
+
+	</script>
